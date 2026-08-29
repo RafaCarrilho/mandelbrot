@@ -4,6 +4,11 @@
 #include "imagem.h"
 #include "serial.h"
 
+#define LARGURA_MAX 4000
+#define ALTURA_MAX 4000
+#define ITERACOES_MAX 4000
+#define THREADS_MAX 4000
+
 int grava_tempo (double tempo, const char *arquivo, const char *operacao){
     FILE *file = fopen(arquivo, "a");
     if (file == NULL) {
@@ -45,31 +50,51 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Uso: ./mandelbrot largura altura max_iteracoes num_threads\n");
         return -1;
     }
+    if (largura_long > LARGURA_MAX || largura_long <= 0){
+        fprintf(stderr, "Erro: Número de largura fora da faixa permitida\n");
+        return -1;
+    }
     largura = (int)largura_long;
+
+    
 
     long altura_long = strtol(argv[2], &sobra, 10);
     if (*sobra != '\0') {
         fprintf(stderr, "Uso: ./mandelbrot largura altura max_iteracoes num_threads\n");
         return -1;
     }
+    if (altura_long > ALTURA_MAX || altura_long <= 0){
+        fprintf(stderr, "Erro: Número de altura fora da faixa permitida\n");
+        return -1;
+    }
     altura = (int)altura_long;
+
 
     long max_iteracoes_long = strtol(argv[3], &sobra, 10);
     if (*sobra != '\0') {
         fprintf(stderr, "Uso: ./mandelbrot largura altura max_iteracoes num_threads\n");
         return -1;
     }
+    if (max_iteracoes_long > ITERACOES_MAX || max_iteracoes_long <= 0){
+        fprintf(stderr, "Erro: Número de iterações fora da faixa permitida\n");
+        return -1;
+    }
     max_iteracoes = (int)max_iteracoes_long;
+
 
     long max_threads_long = strtol(argv[4], &sobra, 10);
     if (*sobra != '\0') {
         fprintf(stderr, "Uso: ./mandelbrot largura altura max_iteracoes num_threads\n");
         return -1;
     }
+    if (max_threads_long > THREADS_MAX || max_threads_long <= 0){
+        fprintf(stderr, "Erro: Número de threads fora da faixa permitida\n");
+        return -1;
+    }
     max_threads = (int)max_threads_long;
 
     
-    if (largura <= 0) {
+/*     if (largura <= 0) {
         fprintf(stderr, "Erro: largura deve ser um numero inteiro positivo\n");
         return -1;
     }
@@ -84,7 +109,7 @@ int main(int argc, char *argv[]) {
     if (max_threads <= 0) {
         fprintf(stderr, "Erro: num_threads deve ser um numero inteiro positivo\n");
         return -1;
-    }
+    } */
     
     clock_gettime(CLOCK_MONOTONIC, &inicio);
     int *vetor_imagem = preenche_vetor(largura, altura, max_iteracoes);
