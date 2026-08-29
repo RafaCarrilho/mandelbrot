@@ -25,5 +25,6 @@ int *preenche_vetor(int largura, int altura, int max_iteracoes) {
 
         }
     }
+    
     return vetor_imagem;
 }
