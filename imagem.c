@@ -27,7 +27,12 @@ int desenha_arquivo(int *vetor_imagem, int largura, int altura, const char *nome
     
     for (int linha = 0; linha < altura; linha++) {
         for (int coluna = 0; coluna < largura; coluna++) {
-            fprintf(arquivo, "%d ", vetor_imagem[linha*largura + coluna]);
+            if (coluna != largura-1){
+                fprintf(arquivo, "%d ", vetor_imagem[linha*largura + coluna]);
+            }else{
+                fprintf(arquivo, "%d", vetor_imagem[linha*largura + coluna]);
+            }
+            
         }
         fprintf(arquivo, "\n");
     }

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "escape.h"
 #include "imagem.h"
+#include "serial.h"
 
 int *preenche_vetor(int largura, int altura, int max_iteracoes) {
     
