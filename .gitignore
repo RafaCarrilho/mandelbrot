@@ -1,3 +1,5 @@
 mandelbrot
 *.o
 evidencias.log
+teste_escape
+teste_imagem
