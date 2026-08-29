@@ -1,6 +1,7 @@
 #include "escape.h"
 
-int escape (double cr, double ci, int max_iteracoes){
+
+int iteracoes_feitas (double cr, double ci, int max_iteracoes){
     int iteracoes =0;
     double zr=0; 
     double zi=0;
