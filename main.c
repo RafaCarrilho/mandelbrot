@@ -7,10 +7,10 @@
 #include "openmp.h"
 #include "pthread_common.h"
 
-#define LARGURA_MAX 4000
-#define ALTURA_MAX 4000
-#define ITERACOES_MAX 4000
-#define THREADS_MAX 4000
+#define LARGURA_MAX 5000
+#define ALTURA_MAX 5000
+#define ITERACOES_MAX 1000
+#define THREADS_MAX 40
 
 static pthread_t vetor_pthreads[THREADS_MAX];
 
