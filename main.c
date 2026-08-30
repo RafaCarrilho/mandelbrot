@@ -5,7 +5,7 @@
 #include "imagem.h"
 #include "serial.h"
 #include "openmp.h"
-#include "pthread1.h"
+#include "pthread_common.h"
 
 #define LARGURA_MAX 4000
 #define ALTURA_MAX 4000
@@ -179,7 +179,7 @@ int main(int argc, char *argv[]) {
             }
             
             free(vetor_imagem_pthread);
-            for (int j =0; i<max_threads; i++){
+            for (int j =0; j<max_threads; j++){
                 free (vetor_threads[j]);   //liberamos cada struct
             }
             free(vetor_threads); // liberamos o vetor por fim (feito matriz :D)
@@ -210,6 +210,59 @@ int main(int argc, char *argv[]) {
     }
     free(vetor_threads); // liberamos o vetor por fim (feito matriz :D)
 
+    
+    //execução de pthreads2
+    
+    vetor_imagem_pthread = (int*) malloc ((largura*altura)*sizeof(int));
+    if (vetor_imagem_pthread == NULL){
+        fprintf(stderr, "Erro: falha ao alocar memoria para a imagem (Pthread2)\n");
+        return -1;
+    } 
+    
+    clock_gettime(CLOCK_MONOTONIC, &inicio);
+    vetor_threads = criador_thread_2 (largura, altura, max_threads, max_iteracoes, vetor_imagem_pthread);
+    if (vetor_threads == NULL){
+        fprintf(stderr, "Erro: falha ao alocar memoria para criação de struct thread\n");
+        return -1;
+    }
+    
 
+    for (int i=0; i< max_threads; i++){
+        if (pthread_create(&vetor_pthreads[i], NULL, funcao_enviada_2, vetor_threads[i])!=0){
+            for (int p =0; p<i; p++){
+                pthread_join (vetor_pthreads[p], NULL); 
+            }
+            
+            free(vetor_imagem_pthread);
+            for (int j =0; j<max_threads; j++){
+                free (vetor_threads[j]);   //liberamos cada struct
+            }
+            free(vetor_threads); // liberamos o vetor por fim (feito matriz :D)
+            fprintf(stderr, "Erro: falha na criação de pthread\n");
+            return -1;
+        }
+        //Pthread_create precisa de alguns ingredientes, um vetor de pthread_t* (ou só 1), quase 
+        //sempre um NULL, a funcao que ele vai executar, a struct que contem os ingredientes DESSA função
+
+    }
+    for (int i=0; i< max_threads; i++){ //agora vamos waitar cada thread antes de desenhar o nosso arquivo
+        pthread_join (vetor_pthreads[i], NULL);     
+    }
+    clock_gettime(CLOCK_MONOTONIC, &fim);
+    
+    tempo = (fim.tv_sec - inicio.tv_sec) + (fim.tv_nsec - inicio.tv_nsec) / 1e9;
+    arquivo_desenhado = desenha_arquivo(vetor_imagem_pthread, largura, altura, "mandelbrot_rac4_pthreads2.pgm");
+    if (arquivo_desenhado == -1){
+        fprintf(stderr, "Erro: nao foi possivel criar o arquivo mandelbrot_rac4_pthreads2.pgm\n");
+        return -1;
+    }
+    grava_tempo(tempo, "times.txt", "Pthreads2");
+    
+    
+    free(vetor_imagem_pthread);
+    for (int i =0; i<max_threads; i++){
+        free (vetor_threads[i]);   //liberamos cada struct
+    }
+    free(vetor_threads); // liberamos o vetor por fim (feito matriz :D)
     return 0;
 }

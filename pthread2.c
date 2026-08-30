@@ -5,7 +5,7 @@
 
 
 static int indice = 0;
-thread ** criador_thread (int largura, int altura, int threads, int max_iteracoes, int* vetor_imagem){
+thread ** criador_thread_2 (int largura, int altura, int threads, int max_iteracoes, int* vetor_imagem){
     
     indice =0;
     
@@ -29,7 +29,7 @@ thread ** criador_thread (int largura, int altura, int threads, int max_iteracoe
             if (t<sobra){ //vamos dizer que sobrou 2 threads, as threads 0 e 1 são as sortudas
                 fio-> tarefas = base+1; //aqui a tarefa extra
                 fio->threads = threads;
-                fio-> linha_inicial = t*(base+1);
+                fio-> linha_inicial = t;
                 fio-> largura = largura;
                 fio-> altura = altura;
                 fio-> max_iteracoes = max_iteracoes;
@@ -39,7 +39,7 @@ thread ** criador_thread (int largura, int altura, int threads, int max_iteracoe
             } else {
                 fio->tarefas = base;
                 fio->threads = threads;
-                fio->linha_inicial = (sobra*(base+1) + (t-sobra)*base); //aqui eu preciso calcular todas 
+                fio->linha_inicial = t; 
                 fio-> largura = largura;                                //as que tiveram tarefa extra como linha base     
                 fio-> altura = altura;                                  //e ai multiplicar pela base mas tirando as "sobras" 
                 fio-> max_iteracoes = max_iteracoes;                    //que ja foram calculadas (t - as irregulares)
@@ -54,14 +54,14 @@ thread ** criador_thread (int largura, int altura, int threads, int max_iteracoe
 }
 
 
-void *funcao_enviada(void *arg){
+void *funcao_enviada_2(void *arg){
     thread *fio = (thread *) arg; //tem que colocar esse cast aqui, pra o argumento virar o que eu preciso
 
     if (fio->vetor_imagem == NULL){
         return NULL;
     }
 
-    for (int linha = fio->linha_inicial; linha < (fio->linha_inicial + fio-> tarefas); linha ++){
+    for (int linha = fio->linha_inicial; linha <= fio->linha_inicial + fio->threads *((fio-> tarefas)-1); linha += fio->threads){
         for (int coluna = 0; coluna < fio->largura; coluna ++){ 
             double cr= mapeia_horizontal (coluna, fio->largura);
             double ci = mapeia_vertical (linha, fio->altura);
