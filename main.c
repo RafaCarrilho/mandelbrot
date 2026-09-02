@@ -134,7 +134,11 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Erro: nao foi possivel criar o arquivo mandelbrot_rac4_serial.pgm\n");
         return -1;
     }
-    grava_tempo(tempo, "times.txt", "Serial");
+    
+    if (grava_tempo(tempo, "times.txt", "Serial") == -1){
+        fprintf(stderr, "Erro: nao foi possivel gravar o tempo em times.txt\n");
+        return -1;
+    }
     free(vetor_imagem);
 
     
@@ -154,7 +158,10 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Erro: nao foi possivel criar o arquivo mandelbrot_rac4_openmp.pgm\n");
         return -1;
     }
-    grava_tempo(tempo, "times.txt", "OpenMP");
+    if (grava_tempo(tempo, "times.txt", "OpenMP") == -1){
+        fprintf(stderr, "Erro: nao foi possivel gravar o tempo em times.txt\n");
+        return -1;
+    }
     free(vetor_imagem);
 
     //execução pthreads1
@@ -201,7 +208,11 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Erro: nao foi possivel criar o arquivo mandelbrot_rac4_pthreads1.pgm\n");
         return -1;
     }
-    grava_tempo(tempo, "times.txt", "Pthreads1");
+    
+    if (grava_tempo(tempo, "times.txt", "Pthreads1") == -1){
+        fprintf(stderr, "Erro: nao foi possivel gravar o tempo em times.txt\n");
+        return -1;
+    }
     
     
     free(vetor_imagem_pthread);
@@ -216,7 +227,7 @@ int main(int argc, char *argv[]) {
    clock_gettime(CLOCK_MONOTONIC, &inicio);
     vetor_imagem = preenche_vetor(largura, altura, max_iteracoes);
     if (vetor_imagem == NULL){
-        fprintf(stderr, "Erro: falha ao alocar memoria para a imagem\n");
+        fprintf(stderr, "Erro: falha ao alocar memoria para a imagem (Pthreads2)\n");
         return -1;
     }
     clock_gettime(CLOCK_MONOTONIC, &fim);
@@ -224,7 +235,7 @@ int main(int argc, char *argv[]) {
 
     thread_escritora** vetor_escritora = criador_thread_escritora (largura, altura, max_threads, vetor_imagem);
     if (vetor_escritora == NULL){
-        fprintf(stderr, "Erro: falha ao alocar memoria para criação de struct thread\n");
+        fprintf(stderr, "Erro: falha ao alocar memoria para criação de struct thread (Pthreads2)\n");
         return -1;
     }
     
@@ -263,7 +274,10 @@ int main(int argc, char *argv[]) {
     fclose(arquivo);
     
     tempo = (fim.tv_sec - inicio.tv_sec) + (fim.tv_nsec - inicio.tv_nsec) / 1e9;
-    grava_tempo(tempo, "times.txt", "Pthreads2");
+    if (grava_tempo(tempo, "times.txt", "Pthreads2") == -1){
+        fprintf(stderr, "Erro: nao foi possivel gravar o tempo em times.txt\n");
+        return -1;
+    }
     
     
     free(vetor_imagem);
